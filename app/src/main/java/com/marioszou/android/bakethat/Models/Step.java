@@ -3,6 +3,25 @@ package com.marioszou.android.bakethat.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/* example of Steps JSON Array
+[
+         {
+            "id":0,
+            "shortDescription":"Recipe Introduction",
+            "description":"Recipe Introduction",
+            "videoURL":"https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd974_-intro-creampie/-intro-creampie.mp4",
+            "thumbnailURL":""
+         },
+         {
+            "id":1,
+            "shortDescription":"Starting prep",
+            "description":"1. Preheat the oven to 350\u00b0F. Butter a 9\" deep dish pie pan.",
+            "videoURL":"",
+            "thumbnailURL":""
+         }
+  ]
+ */
+
 public class Step {
 
   @SerializedName("id")
@@ -20,30 +39,6 @@ public class Step {
   @SerializedName("thumbnailURL")
   @Expose
   private String thumbnailURL;
-
-  /**
-   * No args constructor for use in serialization
-   *
-   */
-  public Step() {
-  }
-
-  /**
-   *
-   * @param id
-   * @param shortDescription
-   * @param description
-   * @param videoURL
-   * @param thumbnailURL
-   */
-  public Step(Integer id, String shortDescription, String description, String videoURL, String thumbnailURL) {
-    super();
-    this.id = id;
-    this.shortDescription = shortDescription;
-    this.description = description;
-    this.videoURL = videoURL;
-    this.thumbnailURL = thumbnailURL;
-  }
 
   public Integer getId() {
     return id;

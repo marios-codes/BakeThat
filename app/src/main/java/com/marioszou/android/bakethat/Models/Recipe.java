@@ -4,6 +4,28 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
+/* example of Recipes JSON Array
+
+[
+   {
+      "id":1,
+      "name":"Nutella Pie",
+      "ingredients":[  ],
+      "steps":[  ],
+      "servings":8,
+      "image":""
+   },
+   {
+      "id":2,
+      "name":"Brownies",
+      "ingredients":[  ],
+      "steps":[  ],
+      "servings":8,
+      "image":""
+   }
+ ]
+ */
+
 public class Recipe {
 
   @SerializedName("id")
@@ -21,31 +43,9 @@ public class Recipe {
   @SerializedName("servings")
   @Expose
   private Integer servings;
-
-
-  /**
-   * No args constructor for use in serialization
-   *
-   */
-  public Recipe() {
-  }
-
-  /**
-   *
-   * @param ingredients
-   * @param id
-   * @param servings
-   * @param name
-   * @param steps
-   */
-  public Recipe(Integer id, String name, List<Ingredient> ingredients, List<Step> steps, Integer servings) {
-    super();
-    this.id = id;
-    this.name = name;
-    this.ingredients = ingredients;
-    this.steps = steps;
-    this.servings = servings;
-  }
+  @SerializedName("image")
+  @Expose
+  private String image;
 
   public Integer getId() {
     return id;
@@ -85,6 +85,14 @@ public class Recipe {
 
   public void setServings(Integer servings) {
     this.servings = servings;
+  }
+
+  public String getImage() {
+    return image;
+  }
+
+  public void setImage(String image) {
+    this.image = image;
   }
 
 }
