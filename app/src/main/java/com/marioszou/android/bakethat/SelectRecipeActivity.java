@@ -1,6 +1,7 @@
 package com.marioszou.android.bakethat;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,12 +24,15 @@ import timber.log.Timber;
 public class SelectRecipeActivity extends AppCompatActivity implements
     RecipesAdapterOnClickHandler {
 
+  private static final String SAVED_LIST_POSITION_KEY = "list-position";
+
   @BindView(R.id.recyclerview_recipes)
   RecyclerView mRecyclerView;
   @BindView(R.id.pb_loading_indicator)
   ProgressBar mLoadingIndicator;
 
   private RecipesAdapter mAdapter;
+  private Bundle mSavedInstanceState;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class SelectRecipeActivity extends AppCompatActivity implements
 
     ButterKnife.bind(this);
 
+    mSavedInstanceState = savedInstanceState;
     initViews();
     fetchRecipesFromApi();
   }
@@ -69,6 +74,7 @@ public class SelectRecipeActivity extends AppCompatActivity implements
           List<Recipe> recipesList = response.body();
           Timber.d("Number of objects in Recipe List: %s", recipesList.size());
           mAdapter.setRecipeList(recipesList);
+          scrollListToSavedPosition();
         }
       }
 
@@ -81,6 +87,17 @@ public class SelectRecipeActivity extends AppCompatActivity implements
     });
   }
 
+  private void scrollListToSavedPosition() {
+    if (mSavedInstanceState != null && mSavedInstanceState
+        .containsKey(SAVED_LIST_POSITION_KEY)) {
+      Parcelable savedRecyclerLayoutState = mSavedInstanceState
+          .getParcelable(SAVED_LIST_POSITION_KEY);
+      mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+    } else {
+      mRecyclerView.scrollToPosition(0);
+    }
+  }
+
   /**
    * This method is overridden by our SelectRecipe class in order to handle RecyclerView item
    * clicks.
@@ -90,5 +107,18 @@ public class SelectRecipeActivity extends AppCompatActivity implements
   @Override
   public void onClick(Recipe recipe) {
 
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    /* save the scroll position of the list and the preferred sorting type
+    in order to retain it on a configuration change
+    Also check for null, otherwise app will crash on orientation change with no internet connection
+    */
+    if (mRecyclerView != null && mRecyclerView.getLayoutManager() != null) {
+      outState.putParcelable(SAVED_LIST_POSITION_KEY,
+          mRecyclerView.getLayoutManager().onSaveInstanceState());
+    }
   }
 }
