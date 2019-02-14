@@ -3,8 +3,10 @@ package com.marioszou.android.bakethat;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
 import android.widget.ProgressBar;
 import butterknife.BindView;
@@ -25,6 +27,8 @@ public class SelectRecipeActivity extends AppCompatActivity implements
     RecipesAdapterOnClickHandler {
 
   private static final String SAVED_LIST_POSITION_KEY = "list-position";
+  private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net";
+  private static final int GRID_SPAN_COUNT = 3;
 
   @BindView(R.id.recyclerview_recipes)
   RecyclerView mRecyclerView;
@@ -33,6 +37,7 @@ public class SelectRecipeActivity extends AppCompatActivity implements
 
   private RecipesAdapter mAdapter;
   private Bundle mSavedInstanceState;
+  private LayoutManager mLayoutManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +52,15 @@ public class SelectRecipeActivity extends AppCompatActivity implements
   }
 
   private void initViews() {
-    LinearLayoutManager layoutManager = new LinearLayoutManager(SelectRecipeActivity.this);
-    mRecyclerView.setLayoutManager(layoutManager);
+    //check if layout is sw600dp so that we can set the appropriate layout manager
+    //for our recyclerview
+    boolean is600dp = getResources().getBoolean(R.bool.is600dp);
+    if (is600dp) {
+      mLayoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
+    } else {
+      mLayoutManager = new LinearLayoutManager(SelectRecipeActivity.this);
+    }
+    mRecyclerView.setLayoutManager(mLayoutManager);
     mRecyclerView.setHasFixedSize(true);
     mAdapter = new RecipesAdapter(this);
     mRecyclerView.setAdapter(mAdapter);
@@ -56,7 +68,7 @@ public class SelectRecipeActivity extends AppCompatActivity implements
 
   private void fetchRecipesFromApi() {
     Retrofit retrofit = new Retrofit.Builder()
-        .baseUrl("https://d17h27t6h515a5.cloudfront.net")
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build();
 
