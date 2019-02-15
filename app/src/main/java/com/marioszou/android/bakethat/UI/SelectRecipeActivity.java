@@ -1,4 +1,4 @@
-package com.marioszou.android.bakethat;
+package com.marioszou.android.bakethat.UI;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -15,6 +15,7 @@ import com.marioszou.android.bakethat.Adapters.RecipesAdapter;
 import com.marioszou.android.bakethat.Adapters.RecipesAdapter.RecipesAdapterOnClickHandler;
 import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.Network.RecipesNetworkService;
+import com.marioszou.android.bakethat.R;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
