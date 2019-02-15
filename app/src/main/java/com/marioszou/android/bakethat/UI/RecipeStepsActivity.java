@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.marioszou.android.bakethat.Models.Ingredient;
 import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.R;
+import com.marioszou.android.bakethat.Utils.Ingredients;
 import java.util.List;
 import timber.log.Timber;
 
@@ -21,8 +22,8 @@ public class RecipeStepsActivity extends AppCompatActivity {
     if (intentExtras != null && intentExtras.get(EXTRAS_RECIPE_ITEM) != null) {
       Recipe recipe = intentExtras.getParcelable(EXTRAS_RECIPE_ITEM);
       assert recipe != null;
-      List<Ingredient> ingredients = recipe.getIngredients();
-      Timber.d("Ingredients: %s", ingredients);
+      List<Ingredient> ingredientsList = recipe.getIngredients();
+      Timber.d("Ingredients: %s", Ingredients.formatAllIngredientsToString(ingredientsList));
     } else {
       Timber.e("Recipe from intent extras is null");
       finish();
