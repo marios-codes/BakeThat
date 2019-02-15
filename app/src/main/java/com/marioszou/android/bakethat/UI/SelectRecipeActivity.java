@@ -1,5 +1,6 @@
 package com.marioszou.android.bakethat.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -119,7 +120,9 @@ public class SelectRecipeActivity extends AppCompatActivity implements
    */
   @Override
   public void onClick(Recipe recipe) {
-
+    Intent openRecipeStepsIntent = new Intent(SelectRecipeActivity.this, RecipeStepsActivity.class);
+    openRecipeStepsIntent.putExtra(RecipeStepsActivity.EXTRAS_RECIPE_ITEM, recipe);
+    startActivity(openRecipeStepsIntent);
   }
 
   @Override
