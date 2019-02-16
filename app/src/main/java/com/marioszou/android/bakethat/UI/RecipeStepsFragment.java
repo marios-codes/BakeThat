@@ -3,6 +3,7 @@ package com.marioszou.android.bakethat.UI;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,7 @@ import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment must implement the
- * {@link OnRecipeStepsFragmentItemClickListener} interface to handle interaction
- * events.
+ * {@link OnRecipeStepsFragmentItemClickListener} interface to handle interaction events.
  */
 public class RecipeStepsFragment extends Fragment {
 
@@ -42,19 +42,25 @@ public class RecipeStepsFragment extends Fragment {
     //View binding
     ButterKnife.bind(this, view);
 
-    Bundle intentExtras = getActivity().getIntent().getExtras();
-    if (intentExtras != null && intentExtras.get(RecipeStepsActivity.EXTRAS_RECIPE_ITEM) != null) {
-      Recipe recipe = intentExtras.getParcelable(RecipeStepsActivity.EXTRAS_RECIPE_ITEM);
+    return view;
+  }
+
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    Bundle fragmentArgs = getArguments();
+    assert fragmentArgs != null;
+    if (fragmentArgs.get(RecipeStepsActivity.EXTRAS_RECIPE_ITEM) != null) {
+      Recipe recipe = fragmentArgs.getParcelable(RecipeStepsActivity.EXTRAS_RECIPE_ITEM);
       assert recipe != null;
       List<Ingredient> ingredientsList = recipe.getIngredients();
       Timber.d("Ingredients: %s", Ingredients.formatAllIngredientsToString(ingredientsList));
       ingredientsTextView.setText(Ingredients.formatAllIngredientsToString(ingredientsList));
     } else {
-      Timber.e("Recipe from intent extras is null");
-      getActivity().finish();
+      Timber
+          .e("RecipeStepsFragment Arguments Bundle does not contain key: RecipeStepsActivity.EXTRAS_RECIPE_ITEM");
     }
-
-    return view;
   }
 
   // TODO: Rename method, update argument and hook method into UI event
