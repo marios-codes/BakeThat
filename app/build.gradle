@@ -27,6 +27,9 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
 
+    //The mighty ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer:r2.2.0'
+
     //view injection
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.android.support:support-v4:28.0.0'

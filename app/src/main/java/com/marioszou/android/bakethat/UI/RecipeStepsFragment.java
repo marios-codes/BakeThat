@@ -1,7 +1,6 @@
 package com.marioszou.android.bakethat.UI;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -90,13 +89,6 @@ public class RecipeStepsFragment extends Fragment implements StepsAdapterOnClick
     mAdapter.setStepsList(stepsList);
   }
 
-  // TODO: Rename method, update argument and hook method into UI event
-  public void onStepPressed(Uri uri) {
-    if (mListener != null) {
-      mListener.onRecipeStepClick(uri);
-    }
-  }
-
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -120,6 +112,10 @@ public class RecipeStepsFragment extends Fragment implements StepsAdapterOnClick
   @Override
   public void onStepClick(Step step) {
     Timber.d(step.getDescription());
+    //Pass the Step that was clicked to the hosting activity (RecipeStepsActivity)
+    if (mListener != null) {
+      mListener.onRecipeStepClick(step);
+    }
   }
 
   /**
@@ -132,7 +128,6 @@ public class RecipeStepsFragment extends Fragment implements StepsAdapterOnClick
    */
   public interface OnRecipeStepsFragmentItemClickListener {
 
-    // TODO: Update argument type and name
-    void onRecipeStepClick(Uri uri);
+    void onRecipeStepClick(Step step);
   }
 }
