@@ -13,7 +13,8 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
-    <activity android:name=".UI.RecipeStepsActivity">
+    <activity android:name=".UI.RecipeStepsActivity"
+      android:parentActivityName=".UI.RecipeStepsActivity">
     </activity>
     <activity android:name=".UI.SelectRecipeActivity">
       <intent-filter>

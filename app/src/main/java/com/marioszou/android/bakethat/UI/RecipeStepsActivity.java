@@ -3,6 +3,7 @@ package com.marioszou.android.bakethat.UI;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.R;
 
 public class RecipeStepsActivity extends AppCompatActivity implements
@@ -20,25 +21,17 @@ public class RecipeStepsActivity extends AppCompatActivity implements
     Bundle args = getIntent().getExtras();
     //Pass the intent extras to the fragment using a bundle
     if (args != null) {
+      //show Dessert Name in Toolbar
+      Recipe recipe = args.getParcelable(EXTRAS_RECIPE_ITEM);
+      assert recipe != null;
+      setTitle(recipe.getName());
+
       assert stepsFragment != null;
       stepsFragment.setArguments(args);
     } else {
       finish();
     }
   }
-
-//  private Bundle getIntentExtras() {
-//    Bundle intentExtras = getIntent().getExtras();
-//    if (intentExtras != null && intentExtras.get(RecipeStepsActivity.EXTRAS_RECIPE_ITEM) != null) {
-//      Recipe recipe = intentExtras.getParcelable(RecipeStepsActivity.EXTRAS_RECIPE_ITEM);
-//      assert recipe != null;
-//      List<Ingredient> ingredientsList = recipe.getIngredients();
-//      Timber.d("Ingredients: %s", Ingredients.formatAllIngredientsToString(ingredientsList));
-//    } else {
-//      Timber.e("Recipe from intent extras is null");
-//    }
-//    return intentExtras;
-//  }
 
   /*
   This is where RecipeStepsFragment communicates with RecipeStepsActivity and gives this activity

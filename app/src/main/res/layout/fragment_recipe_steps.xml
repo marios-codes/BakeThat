@@ -4,6 +4,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:focusableInTouchMode="true"
   tools:context=".UI.RecipeStepsFragment">
 
   <LinearLayout
@@ -14,17 +15,43 @@
     <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_margin="16dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
       android:text="@string/ingredients_label"
       android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
-  <TextView
-    android:id="@+id/tv_ingredients"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-    tools:text="• unsalted butter, melted (6.0 TBLSP)\n• granulated sugar (0.5 CUP) "/>
+    <TextView
+      android:id="@+id/tv_ingredients"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      tools:text="• unsalted butter, melted (6.0 TBLSP)\n• granulated sugar (0.5 CUP) "/>
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="8dp"
+      android:text="@string/steps_label"
+      android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+    <android.support.v7.widget.RecyclerView
+      android:id="@+id/rv_recipe_steps"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginBottom="8dp">
+    </android.support.v7.widget.RecyclerView>
 
   </LinearLayout>
 

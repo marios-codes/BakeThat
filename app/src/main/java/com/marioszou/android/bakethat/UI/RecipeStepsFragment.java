@@ -5,14 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.marioszou.android.bakethat.Adapters.StepsAdapter;
 import com.marioszou.android.bakethat.Models.Ingredient;
 import com.marioszou.android.bakethat.Models.Recipe;
+import com.marioszou.android.bakethat.Models.Step;
 import com.marioszou.android.bakethat.R;
 import com.marioszou.android.bakethat.Utils.Ingredients;
 import java.util.List;
@@ -26,8 +31,12 @@ public class RecipeStepsFragment extends Fragment {
 
   private OnRecipeStepsFragmentItemClickListener mListener;
 
+  private StepsAdapter mAdapter;
+
   @BindView(R.id.tv_ingredients)
   TextView ingredientsTextView;
+  @BindView(R.id.rv_recipe_steps)
+  RecyclerView mRecyclerView;
 
   public RecipeStepsFragment() {
     // Required empty public constructor
@@ -54,13 +63,30 @@ public class RecipeStepsFragment extends Fragment {
     if (fragmentArgs.get(RecipeStepsActivity.EXTRAS_RECIPE_ITEM) != null) {
       Recipe recipe = fragmentArgs.getParcelable(RecipeStepsActivity.EXTRAS_RECIPE_ITEM);
       assert recipe != null;
-      List<Ingredient> ingredientsList = recipe.getIngredients();
-      Timber.d("Ingredients: %s", Ingredients.formatAllIngredientsToString(ingredientsList));
-      ingredientsTextView.setText(Ingredients.formatAllIngredientsToString(ingredientsList));
+      setupViews(recipe);
     } else {
       Timber
           .e("RecipeStepsFragment Arguments Bundle does not contain key: RecipeStepsActivity.EXTRAS_RECIPE_ITEM");
     }
+  }
+
+  private void setupViews(Recipe recipe) {
+    //show recipe's ingredients
+    List<Ingredient> ingredientsList = recipe.getIngredients();
+    Timber.d("Ingredients: %s", Ingredients.formatAllIngredientsToString(ingredientsList));
+    ingredientsTextView.setText(Ingredients.formatAllIngredientsToString(ingredientsList));
+
+    //setup and show recipe's steps in a recycler view
+    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+    mRecyclerView.setLayoutManager(layoutManager);
+    mRecyclerView.setHasFixedSize(true);
+    mAdapter = new StepsAdapter();
+    mRecyclerView.setAdapter(mAdapter);
+    //for smooth scrolling
+    ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
+
+    List<Step> stepsList = recipe.getSteps();
+    mAdapter.setStepsList(stepsList);
   }
 
   // TODO: Rename method, update argument and hook method into UI event

@@ -39,7 +39,6 @@ public class SelectRecipeActivity extends AppCompatActivity implements
 
   private RecipesAdapter mAdapter;
   private Bundle mSavedInstanceState;
-  private LayoutManager mLayoutManager;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +56,13 @@ public class SelectRecipeActivity extends AppCompatActivity implements
     //check if layout is sw600dp so that we can set the appropriate layout manager
     //for our recyclerview
     boolean is600dp = getResources().getBoolean(R.bool.is600dp);
+    LayoutManager layoutManager;
     if (is600dp) {
-      mLayoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
+      layoutManager = new GridLayoutManager(this, GRID_SPAN_COUNT);
     } else {
-      mLayoutManager = new LinearLayoutManager(SelectRecipeActivity.this);
+      layoutManager = new LinearLayoutManager(SelectRecipeActivity.this);
     }
-    mRecyclerView.setLayoutManager(mLayoutManager);
+    mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setHasFixedSize(true);
     mAdapter = new RecipesAdapter(this);
     mRecyclerView.setAdapter(mAdapter);
