@@ -15,6 +15,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.marioszou.android.bakethat.Adapters.StepsAdapter;
+import com.marioszou.android.bakethat.Adapters.StepsAdapter.StepsAdapterOnClickHandler;
 import com.marioszou.android.bakethat.Models.Ingredient;
 import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.Models.Step;
@@ -27,7 +28,7 @@ import timber.log.Timber;
  * A simple {@link Fragment} subclass. Activities that contain this fragment must implement the
  * {@link OnRecipeStepsFragmentItemClickListener} interface to handle interaction events.
  */
-public class RecipeStepsFragment extends Fragment {
+public class RecipeStepsFragment extends Fragment implements StepsAdapterOnClickHandler {
 
   private OnRecipeStepsFragmentItemClickListener mListener;
 
@@ -80,7 +81,7 @@ public class RecipeStepsFragment extends Fragment {
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     mRecyclerView.setLayoutManager(layoutManager);
     mRecyclerView.setHasFixedSize(true);
-    mAdapter = new StepsAdapter();
+    mAdapter = new StepsAdapter(this);
     mRecyclerView.setAdapter(mAdapter);
     //for smooth scrolling
     ViewCompat.setNestedScrollingEnabled(mRecyclerView, false);
@@ -111,6 +112,14 @@ public class RecipeStepsFragment extends Fragment {
   public void onDetach() {
     super.onDetach();
     mListener = null;
+  }
+
+  /*
+  Callback from StepsAdapter triggered when a Recipe step is clicked
+   */
+  @Override
+  public void onStepClick(Step step) {
+    Timber.d(step.getDescription());
   }
 
   /**

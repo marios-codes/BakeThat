@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -16,10 +17,21 @@ import java.util.List;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapterViewHolder> {
 
+  /**
+   * The interface that receives onClick messages.
+   */
+  public interface StepsAdapterOnClickHandler {
+
+    void onStepClick(Step step);
+
+  }
+
+  private final StepsAdapterOnClickHandler mClickHandler;
   private List<Step> mStepsList = new ArrayList<>();
 
-  public StepsAdapter () {
+  public StepsAdapter(StepsAdapterOnClickHandler clickHandler) {
 
+    this.mClickHandler = clickHandler;
   }
 
 
@@ -52,7 +64,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapterViewHolder> {
     notifyDataSetChanged();
   }
 
-  public class StepsAdapterViewHolder extends RecyclerView.ViewHolder {
+  public class StepsAdapterViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 
     @BindView(R.id.tv_card_step_short_desc)
     TextView shortDescTV;
@@ -60,6 +72,13 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapterViewHolder> {
     public StepsAdapterViewHolder(View view) {
       super(view);
       ButterKnife.bind(this, view);
+      view.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+      Step step = mStepsList.get(getAdapterPosition());
+      mClickHandler.onStepClick(step);
     }
   }
 }
