@@ -1,15 +1,11 @@
 package com.marioszou.android.bakethat.UI;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import com.marioszou.android.bakethat.Models.Ingredient;
-import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.R;
-import com.marioszou.android.bakethat.Utils.Ingredients;
-import java.util.List;
-import timber.log.Timber;
 
-public class RecipeStepsActivity extends AppCompatActivity {
+public class RecipeStepsActivity extends AppCompatActivity implements RecipeStepsFragment.OnRecipeStepsFragmentItemClickListener{
 
   public static final String EXTRAS_RECIPE_ITEM = "recipe-item";
 
@@ -18,15 +14,14 @@ public class RecipeStepsActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_recipe_steps);
 
-    Bundle intentExtras = getIntent().getExtras();
-    if (intentExtras != null && intentExtras.get(EXTRAS_RECIPE_ITEM) != null) {
-      Recipe recipe = intentExtras.getParcelable(EXTRAS_RECIPE_ITEM);
-      assert recipe != null;
-      List<Ingredient> ingredientsList = recipe.getIngredients();
-      Timber.d("Ingredients: %s", Ingredients.formatAllIngredientsToString(ingredientsList));
-    } else {
-      Timber.e("Recipe from intent extras is null");
-      finish();
-    }
+  }
+
+  /*
+  This is where RecipeStepsFragment communicates with RecipeStepsActivity and gives this activity
+  a way to communicate with StepDetailsFragment
+   */
+  @Override
+  public void onRecipeStepClick(Uri uri) {
+    //TODO Implement logic
   }
 }

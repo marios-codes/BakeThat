@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
+<fragment
+  android:id="@+id/master_steps_fragment"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical"
-  tools:context=".UI.RecipeStepsActivity">
-
-
-</LinearLayout>
+  android:name="com.marioszou.android.bakethat.UI.RecipeStepsFragment"
+  tools:context=".UI.RecipeStepsActivity"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
+  </fragment>
