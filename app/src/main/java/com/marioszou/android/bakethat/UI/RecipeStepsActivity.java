@@ -46,7 +46,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements
     Intent openStepDetailsIntent = new Intent(RecipeStepsActivity.this, StepDetailsActivity.class);
     openStepDetailsIntent.putParcelableArrayListExtra(StepDetailsActivity.EXTRA_STEPS_LIST,
         (ArrayList<? extends Parcelable>) mRecipe.getSteps());
-    openStepDetailsIntent.putExtra(StepDetailsActivity.EXTRA_STEP_ITEM, step);
+    openStepDetailsIntent.putExtra(StepDetailsActivity.EXTRA_STEP_ID, step.getId());
     openStepDetailsIntent.putExtra(StepDetailsActivity.EXTRA_RECIPE_NAME, mRecipe.getName());
     startActivity(openStepDetailsIntent);
   }
