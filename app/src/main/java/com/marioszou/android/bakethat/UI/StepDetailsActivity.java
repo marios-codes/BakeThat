@@ -35,10 +35,15 @@ public class StepDetailsActivity extends AppCompatActivity {
     mStepsList = recipeAndStepsListBundle.getParcelableArrayList(EXTRA_STEPS_LIST);
     mCurrentStepId = recipeAndStepsListBundle.getInt(EXTRA_STEP_ID);
 
-    StepDetailsFragment detailsFragment = StepDetailsFragment.newInstance(mStepsList, mCurrentStepId);
+    // Only create new fragments when there is no previously saved state
+    if (savedInstanceState == null) {
+      StepDetailsFragment detailsFragment = StepDetailsFragment.newInstance(mStepsList, mCurrentStepId);
 
-    getSupportFragmentManager().beginTransaction()
-        .add(R.id.step_details_container, detailsFragment).commit();
+      getSupportFragmentManager().beginTransaction()
+          .add(R.id.step_details_container, detailsFragment).commit();
+    } else {
+      mCurrentStepId = savedInstanceState.getInt(EXTRA_STEP_ID);
+    }
   }
 
   public void onPreviousStepClick(View view) {
@@ -66,5 +71,11 @@ public class StepDetailsActivity extends AppCompatActivity {
         return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt(EXTRA_STEP_ID, mCurrentStepId);
   }
 }
