@@ -26,7 +26,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/playerView"
-    tools:text="The available library modules are listed below. Adding a dependency to the full ExoPlayer library is equivalent to adding dependencies on all of the library modules individually."/>
+    tools:text="2. Melt the butter and bittersweet chocolate together in a microwave or a double boiler. If microwaving, heat for 30 seconds at a time, removing bowl and stirring ingredients in between."/>
   <ImageView
     android:id="@+id/iv_step_details_previous"
     android:layout_width="48dp"
@@ -34,6 +34,7 @@
     android:layout_marginBottom="24dp"
     android:layout_marginStart="24dp"
     android:src="@drawable/ic_previous_24dp"
+    android:onClick="onPreviousStepClick"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"/>
   <ImageView
@@ -43,6 +44,7 @@
     android:layout_marginBottom="24dp"
     android:layout_marginEnd="24dp"
     android:src="@drawable/ic_next_24dp"
+    android:onClick="onNextStepClick"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"/>
 

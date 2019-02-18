@@ -2,12 +2,18 @@ package com.marioszou.android.bakethat.UI;
 
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import com.marioszou.android.bakethat.Models.Step;
 import com.marioszou.android.bakethat.R;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link StepDetailsFragment#newInstance} factory
@@ -15,14 +21,15 @@ import com.marioszou.android.bakethat.R;
  */
 public class StepDetailsFragment extends Fragment {
 
-  // TODO: Rename parameter arguments, choose names that match
-  // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-  private static final String ARG_PARAM1 = "param1";
-  private static final String ARG_PARAM2 = "param2";
+  // the fragment initialization parameters
+  private static final String ARG_STEPS_LIST = "steps-list";
+  private static final String ARG_CHOSEN_STEP = "chosen-step";
 
-  // TODO: Rename and change types of parameters
-  private String mParam1;
-  private String mParam2;
+  private List<Step> mStepsList;
+  private Step mChosenStep;
+
+  @BindView(R.id.tv_step_details_desc)
+  TextView stepDescTV;
 
 
   public StepDetailsFragment() {
@@ -33,16 +40,15 @@ public class StepDetailsFragment extends Fragment {
    * Use this factory method to create a new instance of this fragment using the provided
    * parameters.
    *
-   * @param param1 Parameter 1.
-   * @param param2 Parameter 2.
+   * @param stepsList Recipe's entire steps list.
+   * @param chosenStep The step that the user clicked to show its details.
    * @return A new instance of fragment StepDetailsFragment.
    */
-  // TODO: Rename and change types and number of parameters
-  public static StepDetailsFragment newInstance(String param1, String param2) {
+  public static StepDetailsFragment newInstance(List<Step> stepsList, Step chosenStep) {
     StepDetailsFragment fragment = new StepDetailsFragment();
     Bundle args = new Bundle();
-    args.putString(ARG_PARAM1, param1);
-    args.putString(ARG_PARAM2, param2);
+    args.putParcelableArrayList(ARG_STEPS_LIST, (ArrayList<? extends Parcelable>) stepsList);
+    args.putParcelable(ARG_CHOSEN_STEP, chosenStep);
     fragment.setArguments(args);
     return fragment;
   }
@@ -51,16 +57,26 @@ public class StepDetailsFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
-      mParam1 = getArguments().getString(ARG_PARAM1);
-      mParam2 = getArguments().getString(ARG_PARAM2);
+      mStepsList = getArguments().getParcelableArrayList(ARG_STEPS_LIST);
+      mChosenStep = getArguments().getParcelable(ARG_CHOSEN_STEP);
     }
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    //Fragment's layout
+    View view = inflater.inflate(R.layout.fragment_step_details, container, false);
+    ButterKnife.bind(this, view);
+
+    initViews(mChosenStep);
+
     // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_step_details, container, false);
+    return view;
+  }
+
+  private void initViews(Step mChosenStep) {
+    stepDescTV.setText(mChosenStep.getDescription());
   }
 
 }

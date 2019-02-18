@@ -2,10 +2,12 @@ package com.marioszou.android.bakethat.UI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.Models.Step;
 import com.marioszou.android.bakethat.R;
+import java.util.ArrayList;
 
 public class RecipeStepsActivity extends AppCompatActivity implements
     RecipeStepsFragment.OnRecipeStepsFragmentItemClickListener {
@@ -37,11 +39,13 @@ public class RecipeStepsActivity extends AppCompatActivity implements
 
   /*
   This is where RecipeStepsFragment communicates with RecipeStepsActivity and gives this activity
-  a way to communicate with StepDetailsFragment
+  a way to communicate with StepDetailsActivity
    */
   @Override
   public void onRecipeStepClick(Step step) {
     Intent openStepDetailsIntent = new Intent(RecipeStepsActivity.this, StepDetailsActivity.class);
+    openStepDetailsIntent.putParcelableArrayListExtra(StepDetailsActivity.EXTRA_STEPS_LIST,
+        (ArrayList<? extends Parcelable>) mRecipe.getSteps());
     openStepDetailsIntent.putExtra(StepDetailsActivity.EXTRA_STEP_ITEM, step);
     openStepDetailsIntent.putExtra(StepDetailsActivity.EXTRA_RECIPE_NAME, mRecipe.getName());
     startActivity(openStepDetailsIntent);

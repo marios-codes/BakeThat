@@ -15,7 +15,7 @@
     android:theme="@style/AppTheme">
     <activity
       android:name=".UI.RecipeStepsActivity"
-      android:parentActivityName=".UI.RecipeStepsActivity">
+      android:parentActivityName=".UI.SelectRecipeActivity">
     </activity>
     <activity android:name=".UI.StepDetailsActivity"
       android:parentActivityName=".UI.RecipeStepsActivity">
