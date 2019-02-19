@@ -1,8 +1,10 @@
 package com.marioszou.android.bakethat.UI;
 
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource.Factory;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.marioszou.android.bakethat.Models.Step;
 import com.marioszou.android.bakethat.R;
 import java.util.ArrayList;
@@ -25,9 +35,11 @@ public class StepDetailsFragment extends Fragment {
   // the fragment initialization parameters
   private static final String ARG_STEPS_LIST = "steps-list";
   private static final String ARG_CHOSEN_STEP_ID = "chosen-step-id";
+  private static final String SAVED_PLAYER_POSITION = "saved-player-position";
 
   private List<Step> mStepsList;
   private int mChosenStepId;
+  private SimpleExoPlayer mPlayer;
 
   @BindView(R.id.tv_step_details_desc)
   TextView stepDescTV;
@@ -35,6 +47,8 @@ public class StepDetailsFragment extends Fragment {
   Button previousStepBtn;
   @BindView(R.id.iv_step_details_next)
   Button nextStepBtn;
+  @BindView(R.id.exoPlayerView)
+  PlayerView mPlayerView;
 
 
   public StepDetailsFragment() {
@@ -74,24 +88,68 @@ public class StepDetailsFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_step_details, container, false);
     ButterKnife.bind(this, view);
 
-    initViews(mChosenStepId);
+    //continue video playback to the point it was in an orientation change
+    long savedVideoPosition = 0;
+    if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_PLAYER_POSITION)) {
+      savedVideoPosition = savedInstanceState.getLong(SAVED_PLAYER_POSITION);
+    }
+
+    //get Step from step ID
+    Step chosenStep = mStepsList.get(mChosenStepId);
+
+    initViews(chosenStep);
+    //check if step has video instructions to initialize the exo player
+    if (!chosenStep.getVideoURL().isEmpty()){
+      initPlayer(chosenStep.getVideoURL(), savedVideoPosition);
+    }
+
+    //το παραθυρο με το βινδεο εχει ασπεκτ ρεισιο να πουμε, δεν μου αρεσει!
+
 
     // Inflate the layout for this fragment
     return view;
   }
 
-  private void initViews(int mChosenStepId) {
+  private void initViews(Step step) {
     //get Step from step ID
-    Step chosenStep = mStepsList.get(mChosenStepId);
     //Hide previous step button if the user navigates to the first step
-    if (mChosenStepId == 0) {
+    if (step.getId() == 0) {
       previousStepBtn.setVisibility(View.INVISIBLE);
     }
     //Hide next step button if the user navigates to the last step
-    if (mChosenStepId == mStepsList.size() - 1) {
+    if (step.getId() == mStepsList.size() - 1) {
       nextStepBtn.setVisibility(View.INVISIBLE);
     }
-    stepDescTV.setText(chosenStep.getDescription());
+    stepDescTV.setText(step.getDescription());
   }
 
+  private void initPlayer(String videoURL, long savedPositionTimestamp) {
+    mPlayer = ExoPlayerFactory.newSimpleInstance(getContext());
+    // Bind the player to the view.
+    mPlayerView.setPlayer(mPlayer);
+    // Produces DataSource instances through which media data is loaded.
+    Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
+        Util.getUserAgent(getContext(), "BakeThatApplication"));
+    // This is the MediaSource representing the media to be played.
+    MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+        .createMediaSource(Uri.parse(videoURL));
+    // Prepare the player with the source.
+    mPlayer.prepare(videoSource);
+    mPlayer.seekTo(savedPositionTimestamp);
+    mPlayer.setPlayWhenReady(true);
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    if (mPlayer != null){
+      mPlayer.release();
+    }
+  }
+
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putLong(SAVED_PLAYER_POSITION, mPlayer.getCurrentPosition());
+  }
 }
