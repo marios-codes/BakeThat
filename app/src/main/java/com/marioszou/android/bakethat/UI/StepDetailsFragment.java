@@ -139,17 +139,25 @@ public class StepDetailsFragment extends Fragment {
     mPlayer.setPlayWhenReady(true);
   }
 
+  private void releasePlayer() {
+    if (mPlayer != null){
+      mPlayer.stop();
+      mPlayer.release();
+      mPlayer = null;
+    }
+  }
+
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    if (mPlayer != null){
-      mPlayer.release();
-    }
+    releasePlayer();
   }
 
   @Override
   public void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putLong(SAVED_PLAYER_POSITION, mPlayer.getCurrentPosition());
+    if (mPlayer != null) {
+      outState.putLong(SAVED_PLAYER_POSITION, mPlayer.getCurrentPosition());
+    }
   }
 }
