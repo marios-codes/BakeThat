@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,10 +42,13 @@ public class StepDetailsFragment extends Fragment {
   private int mChosenStepId;
   private SimpleExoPlayer mPlayer;
 
+  @Nullable
   @BindView(R.id.tv_step_details_desc)
   TextView stepDescTV;
+  @Nullable
   @BindView(R.id.iv_step_details_previous)
   Button previousStepBtn;
+  @Nullable
   @BindView(R.id.iv_step_details_next)
   Button nextStepBtn;
   @BindView(R.id.exoPlayerView)
@@ -96,31 +100,41 @@ public class StepDetailsFragment extends Fragment {
 
     //get Step from step ID
     Step chosenStep = mStepsList.get(mChosenStepId);
+    //check if fragment is shown in landscape mode
+    boolean isLandscape = getResources().getBoolean(R.bool.is_landscape);
 
-    initViews(chosenStep);
+    initViews(chosenStep, isLandscape);
     //check if step has video instructions to initialize the exo player
-    if (!chosenStep.getVideoURL().isEmpty()){
+    if (!chosenStep.getVideoURL().isEmpty()) {
       initPlayer(chosenStep.getVideoURL(), savedVideoPosition);
     }
 
     //το παραθυρο με το βινδεο εχει ασπεκτ ρεισιο να πουμε, δεν μου αρεσει!
 
-
     // Inflate the layout for this fragment
     return view;
   }
 
-  private void initViews(Step step) {
-    //get Step from step ID
-    //Hide previous step button if the user navigates to the first step
-    if (step.getId() == 0) {
-      previousStepBtn.setVisibility(View.INVISIBLE);
+  private void initViews(Step step, boolean isLandscape) {
+    /*
+    Previous and Next Button will be null if device is in landscape,
+    so we have to check if it is in portrait before we will call methods
+    that might produce a beautiful and developer's best friend NPE
+     */
+    if (!isLandscape) {
+      //Hide previous step button if the user navigates to the first step
+      if (step.getId() == 0) {
+        assert previousStepBtn != null;
+        previousStepBtn.setVisibility(View.INVISIBLE);
+      }
+      //Hide next step button if the user navigates to the last step
+      if (step.getId() == mStepsList.size() - 1) {
+        assert nextStepBtn != null;
+        nextStepBtn.setVisibility(View.INVISIBLE);
+      }
+      assert stepDescTV != null;
+      stepDescTV.setText(step.getDescription());
     }
-    //Hide next step button if the user navigates to the last step
-    if (step.getId() == mStepsList.size() - 1) {
-      nextStepBtn.setVisibility(View.INVISIBLE);
-    }
-    stepDescTV.setText(step.getDescription());
   }
 
   private void initPlayer(String videoURL, long savedPositionTimestamp) {
@@ -140,7 +154,7 @@ public class StepDetailsFragment extends Fragment {
   }
 
   private void releasePlayer() {
-    if (mPlayer != null){
+    if (mPlayer != null) {
       mPlayer.stop();
       mPlayer.release();
       mPlayer = null;
