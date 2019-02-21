@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context=".UI.StepDetailsFragment">
+
+  <com.google.android.exoplayer2.ui.PlayerView
+    android:id="@+id/exoPlayerView"
+    android:layout_width="0dp"
+    android:layout_height="400dp"
+    android:layout_marginTop="32dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:resize_mode="fit"/>
+
+  <TextView
+    android:id="@+id/tv_step_details_desc"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="32dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+    android:textSize="26sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/exoPlayerView"
+    tools:text="2. Melt the butter and bittersweet chocolate together in a microwave or a double boiler. If microwaving, heat for 30 seconds at a time, removing bowl and stirring ingredients in between."/>
+  <Button
+    android:id="@+id/iv_step_details_previous"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_marginBottom="24dp"
+    android:layout_marginStart="24dp"
+    android:background="@drawable/ic_previous_24dp"
+    android:onClick="onPreviousStepClick"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"/>
+  <Button
+    android:id="@+id/iv_step_details_next"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_marginBottom="24dp"
+    android:layout_marginEnd="24dp"
+    android:background="@drawable/ic_next_24dp"
+    android:onClick="onNextStepClick"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

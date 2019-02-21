@@ -26,6 +26,7 @@ import com.marioszou.android.bakethat.Models.Step;
 import com.marioszou.android.bakethat.R;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass. Use the {@link StepDetailsFragment#newInstance} factory
@@ -36,10 +37,12 @@ public class StepDetailsFragment extends Fragment {
   // the fragment initialization parameters
   private static final String ARG_STEPS_LIST = "steps-list";
   private static final String ARG_CHOSEN_STEP_ID = "chosen-step-id";
+  private static final String ARG_IS_TWO_PANE = "is-two-pane";
   private static final String SAVED_PLAYER_POSITION = "saved-player-position";
 
   private List<Step> mStepsList;
   private int mChosenStepId;
+  private boolean mIsTwoPane;
   private SimpleExoPlayer mPlayer;
 
   @Nullable
@@ -67,11 +70,13 @@ public class StepDetailsFragment extends Fragment {
    * @param chosenStepId The step's id which is zero-based incrementation.
    * @return A new instance of fragment StepDetailsFragment.
    */
-  public static StepDetailsFragment newInstance(List<Step> stepsList, int chosenStepId) {
+  public static StepDetailsFragment newInstance(List<Step> stepsList, int chosenStepId,
+      boolean isTwoPane) {
     StepDetailsFragment fragment = new StepDetailsFragment();
     Bundle args = new Bundle();
     args.putParcelableArrayList(ARG_STEPS_LIST, (ArrayList<? extends Parcelable>) stepsList);
     args.putInt(ARG_CHOSEN_STEP_ID, chosenStepId);
+    args.putBoolean(ARG_IS_TWO_PANE, isTwoPane);
     fragment.setArguments(args);
     return fragment;
   }
@@ -82,6 +87,7 @@ public class StepDetailsFragment extends Fragment {
     if (getArguments() != null) {
       mStepsList = getArguments().getParcelableArrayList(ARG_STEPS_LIST);
       mChosenStepId = getArguments().getInt(ARG_CHOSEN_STEP_ID);
+      mIsTwoPane = getArguments().getBoolean(ARG_IS_TWO_PANE);
     }
   }
 
@@ -94,8 +100,10 @@ public class StepDetailsFragment extends Fragment {
 
     //continue video playback to the point it was in an orientation change
     long savedVideoPosition = 0;
+    Timber.d("Player initial position: %d", savedVideoPosition);
     if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_PLAYER_POSITION)) {
       savedVideoPosition = savedInstanceState.getLong(SAVED_PLAYER_POSITION);
+      Timber.d("Player position after orientation change: %d", savedVideoPosition);
     }
 
     //get Step from step ID
@@ -103,25 +111,26 @@ public class StepDetailsFragment extends Fragment {
     //check if fragment is shown in landscape mode
     boolean isLandscape = getResources().getBoolean(R.bool.is_landscape);
 
-    initViews(chosenStep, isLandscape);
+    initViews(chosenStep, mIsTwoPane, isLandscape);
     //check if step has video instructions to initialize the exo player
     if (!chosenStep.getVideoURL().isEmpty()) {
+      Timber.d("Starting Player with position: %d", savedVideoPosition);
       initPlayer(chosenStep.getVideoURL(), savedVideoPosition);
     }
-
-    //το παραθυρο με το βινδεο εχει ασπεκτ ρεισιο να πουμε, δεν μου αρεσει!
 
     // Inflate the layout for this fragment
     return view;
   }
 
-  private void initViews(Step step, boolean isLandscape) {
-    /*
-    Previous and Next Button will be null if device is in landscape,
-    so we have to check if it is in portrait before we will call methods
-    that might produce a beautiful and developer's best friend NPE
-     */
-    if (!isLandscape) {
+  private void initViews(Step step, boolean isTwoPane, boolean isLandscape) {
+
+    if (isTwoPane) {
+      // previous and next button views are GONE by default in sw600dp layouts
+      //so no need to hide them
+      assert stepDescTV != null;
+      stepDescTV.setText(step.getDescription());
+    } else {
+      //not two pane
       //Hide previous step button if the user navigates to the first step
       if (step.getId() == 0) {
         assert previousStepBtn != null;
@@ -132,8 +141,11 @@ public class StepDetailsFragment extends Fragment {
         assert nextStepBtn != null;
         nextStepBtn.setVisibility(View.INVISIBLE);
       }
-      assert stepDescTV != null;
-      stepDescTV.setText(step.getDescription());
+      if (!isLandscape) {
+        //show text description, otherwise we get a NPE calling setText()
+        assert stepDescTV != null;
+        stepDescTV.setText(step.getDescription());
+      }
     }
   }
 
@@ -170,8 +182,10 @@ public class StepDetailsFragment extends Fragment {
   @Override
   public void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
+    Timber.d("Inside on SaveInstanceState");
     if (mPlayer != null) {
       outState.putLong(SAVED_PLAYER_POSITION, mPlayer.getCurrentPosition());
+      Timber.d("Player position before orientation change: %d", mPlayer.getCurrentPosition());
     }
   }
 }

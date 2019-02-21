@@ -14,9 +14,11 @@ public class StepDetailsActivity extends AppCompatActivity {
   public static final String EXTRA_STEPS_LIST = "steps-list";
   public static final String EXTRA_STEP_ID = "step-id";
   public static final String EXTRA_RECIPE_NAME = "recipe-name";
+  public static final String EXTRA_IS_TWO_PANE = "is-two-pane";
 
   private int mCurrentStepId = -1;
   private List<Step> mStepsList = new ArrayList<>();
+  private boolean mIsTwoPane;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +36,11 @@ public class StepDetailsActivity extends AppCompatActivity {
     //Pass the Steps List and the Step Item as StepDetailsFragment arguments to populate its views
     mStepsList = recipeAndStepsListBundle.getParcelableArrayList(EXTRA_STEPS_LIST);
     mCurrentStepId = recipeAndStepsListBundle.getInt(EXTRA_STEP_ID);
+    mIsTwoPane = recipeAndStepsListBundle.getBoolean(EXTRA_IS_TWO_PANE);
 
     // Only create new fragments when there is no previously saved state
     if (savedInstanceState == null) {
-      StepDetailsFragment detailsFragment = StepDetailsFragment.newInstance(mStepsList, mCurrentStepId);
+      StepDetailsFragment detailsFragment = StepDetailsFragment.newInstance(mStepsList, mCurrentStepId, mIsTwoPane);
 
       getSupportFragmentManager().beginTransaction()
           .add(R.id.step_details_container, detailsFragment).commit();
@@ -48,7 +51,7 @@ public class StepDetailsActivity extends AppCompatActivity {
 
   public void onPreviousStepClick(View view) {
     StepDetailsFragment newDetailsFragment = StepDetailsFragment
-        .newInstance(mStepsList, mCurrentStepId - 1);
+        .newInstance(mStepsList, mCurrentStepId - 1, mIsTwoPane);
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.step_details_container, newDetailsFragment).commit();
     mCurrentStepId -= 1;
@@ -56,7 +59,7 @@ public class StepDetailsActivity extends AppCompatActivity {
 
   public void onNextStepClick(View view) {
     StepDetailsFragment newDetailsFragment = StepDetailsFragment
-        .newInstance(mStepsList, mCurrentStepId + 1);
+        .newInstance(mStepsList, mCurrentStepId + 1, mIsTwoPane);
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.step_details_container, newDetailsFragment).commit();
     mCurrentStepId += 1;
