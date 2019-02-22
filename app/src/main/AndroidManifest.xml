@@ -13,11 +13,22 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
+    <receiver android:name=".Widget.IngredientsWidgetProvider">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/ingredients_widget_info"/>
+    </receiver>
+
     <activity
       android:name=".UI.RecipeStepsActivity"
       android:parentActivityName=".UI.SelectRecipeActivity">
     </activity>
-    <activity android:name=".UI.StepDetailsActivity"
+    <activity
+      android:name=".UI.StepDetailsActivity"
       android:parentActivityName=".UI.RecipeStepsActivity">
     </activity>
     <activity android:name=".UI.SelectRecipeActivity">

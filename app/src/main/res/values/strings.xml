@@ -4,4 +4,7 @@
 
   <string name="ingredients_label">Ingredients</string>
   <string name="steps_label">Steps</string>
+  <string name="appwidget_text">EXAMPLE</string>
+  <string name="add_widget">Add widget</string>
+  <string name="widget_empty_view_prompt">Open a recipe first</string>
 </resources>
