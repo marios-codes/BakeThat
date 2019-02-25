@@ -7,8 +7,10 @@ import android.widget.RemoteViewsService;
 import com.marioszou.android.bakethat.Models.Ingredient;
 import com.marioszou.android.bakethat.R;
 import com.marioszou.android.bakethat.Utils.IngredientsUtils;
+import com.marioszou.android.bakethat.Utils.SharePrefsUtils;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 public class ListWidgetService extends RemoteViewsService {
 
@@ -24,8 +26,6 @@ public class ListWidgetService extends RemoteViewsService {
 
     public ListRemoteViewsFactory(Context context, Intent intent) {
       mContext = context;
-//      mIngredientsList = intent
-//          .getParcelableArrayListExtra(IngredientsWidgetProvider.EXTRA_APP_WIDGET_INGREDIENTS_LIST);
     }
 
     @Override
@@ -36,7 +36,13 @@ public class ListWidgetService extends RemoteViewsService {
     //called on start and when notifyAppWidgetViewDataChanged is called
     @Override
     public void onDataSetChanged() {
-
+      //Get ingredients from shared preferences, this list will be null
+      //if the user places the widget before opening a recipe inside the app
+      List<Ingredient> ingredientList = SharePrefsUtils.getRecipeIngredients(mContext);
+      Timber.d("Ingedient List on List Widget's onDataSetChanged() state: %s", ingredientList);
+      if (ingredientList != null) {
+        mIngredientsList = ingredientList;
+      }
     }
 
     @Override
@@ -53,12 +59,12 @@ public class ListWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViews getViewAt(int position) {
-      Ingredient ingredient = mIngredientsList.get(position);
+        Ingredient ingredient = mIngredientsList.get(position);
 
-      RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(),
-          R.layout.widget_ingredient_list_item);
-      remoteViews.setTextViewText(R.id.widget_list_item_ingredient_tv,
-          IngredientsUtils.getFormattedIngredientInfo(ingredient));
+        RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(),
+            R.layout.widget_ingredient_list_item);
+        remoteViews.setTextViewText(R.id.widget_list_item_ingredient_tv,
+            IngredientsUtils.getFormattedIngredientInfo(ingredient));
 
       return remoteViews;
     }

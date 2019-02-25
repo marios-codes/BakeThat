@@ -1,5 +1,8 @@
 package com.marioszou.android.bakethat.UI;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -7,7 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.Models.Step;
 import com.marioszou.android.bakethat.R;
+import com.marioszou.android.bakethat.Utils.SharePrefsUtils;
+import com.marioszou.android.bakethat.Widget.IngredientsWidgetProvider;
 import java.util.ArrayList;
+import timber.log.Timber;
 
 public class RecipeStepsActivity extends AppCompatActivity implements
     RecipeStepsFragment.OnRecipeStepsFragmentItemClickListener {
@@ -89,6 +95,24 @@ public class RecipeStepsActivity extends AppCompatActivity implements
       startActivity(openStepDetailsIntent);
     }
 
+  }
+  /*
+  Updates the widget with the latest opened recipe ingredients
+   */
+  private void updateWidget(Context context) {
+    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+    ComponentName ingredientsWidget = new ComponentName(context, IngredientsWidgetProvider.class);
+    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(ingredientsWidget);
+    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_list_view);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    //save selected recipe to shared prefs so that we can show its ingredients on our widget
+    SharePrefsUtils.saveRecipeIngredients(RecipeStepsActivity.this, mRecipe.getIngredients());
+    Timber.d("Recipe Ingredients Successfully saved to shared prefs");
+    updateWidget(RecipeStepsActivity.this);
   }
 
   @Override

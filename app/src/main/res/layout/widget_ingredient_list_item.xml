@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_height="wrap_content"
+  android:layout_width="match_parent">
+
 <TextView
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
@@ -6,8 +11,10 @@
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
   android:padding="8dp"
-  android:textStyle="bold"
-  android:textSize="44sp"
+  android:gravity="start"
+  android:textAppearance="@style/TextAppearance.AppCompat.Body1"
   tools:text="Ingredient 1">
 
 </TextView>
+
+</LinearLayout>
