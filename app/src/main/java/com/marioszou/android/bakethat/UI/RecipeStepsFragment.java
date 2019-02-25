@@ -19,7 +19,7 @@ import com.marioszou.android.bakethat.Models.Ingredient;
 import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.Models.Step;
 import com.marioszou.android.bakethat.R;
-import com.marioszou.android.bakethat.Utils.Ingredients;
+import com.marioszou.android.bakethat.Utils.IngredientsUtils;
 import java.util.List;
 import timber.log.Timber;
 
@@ -73,8 +73,8 @@ public class RecipeStepsFragment extends Fragment implements StepsAdapterOnClick
   private void setupViews(Recipe recipe) {
     //show recipe's ingredients
     List<Ingredient> ingredientsList = recipe.getIngredients();
-    Timber.d("Ingredients: %s", Ingredients.formatAllIngredientsToString(ingredientsList));
-    ingredientsTextView.setText(Ingredients.formatAllIngredientsToString(ingredientsList));
+    Timber.d("Ingredients: %s", IngredientsUtils.formatAllIngredientsToString(ingredientsList));
+    ingredientsTextView.setText(IngredientsUtils.formatAllIngredientsToString(ingredientsList));
 
     //setup and show recipe's steps in a recycler view
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
