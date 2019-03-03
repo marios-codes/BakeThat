@@ -3,9 +3,11 @@ package com.marioszou.android.bakethat;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
@@ -47,7 +49,7 @@ public class SelectRecipeScreenTest {
   }
 
   @Test
-  public void recipeItemClick_opensRecipeSteps_showsIngredients() {
+  public void recipeItemClick_OpensRecipeSteps_ShowsIngredients() {
 
     onView(withId(R.id.recyclerview_recipes))
         .perform(RecyclerViewActions.actionOnItemAtPosition(BROWNIES_POSITION, click()));
@@ -57,6 +59,20 @@ public class SelectRecipeScreenTest {
 
   }
 
+  @Test
+  public void recipeItemClick_OpensRecipeSteps_NotShowButtonsOnTablet() {
+
+    onView(withId(R.id.recyclerview_recipes))
+        .perform(RecyclerViewActions.actionOnItemAtPosition(BROWNIES_POSITION, click()));
+
+    boolean isTablet = mActivityTestRule.getActivity().getResources()
+        .getBoolean(R.bool.is600dp);
+
+    if (isTablet) {
+      onView(withId(R.id.iv_step_details_previous)).check(matches(not(isDisplayed())));
+      onView(withId(R.id.iv_step_details_next)).check(matches(not(isDisplayed())));
+    }
+  }
 
   // Remember to unregister resources when not needed to avoid malfunction.
   @After
