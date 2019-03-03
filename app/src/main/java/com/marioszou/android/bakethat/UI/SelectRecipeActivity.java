@@ -1,19 +1,25 @@
 package com.marioszou.android.bakethat.UI;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
 import android.widget.ProgressBar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
+import androidx.test.espresso.IdlingResource;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.marioszou.android.bakethat.Adapters.RecipesAdapter;
 import com.marioszou.android.bakethat.Adapters.RecipesAdapter.RecipesAdapterOnClickHandler;
+import com.marioszou.android.bakethat.IdlingResource.SimpleIdlingResource;
 import com.marioszou.android.bakethat.Models.Recipe;
 import com.marioszou.android.bakethat.Network.RecipesNetworkService;
 import com.marioszou.android.bakethat.R;
@@ -40,12 +46,31 @@ public class SelectRecipeActivity extends AppCompatActivity implements
   private RecipesAdapter mAdapter;
   private Bundle mSavedInstanceState;
 
+  // The Idling Resource which will be null in production.
+  @Nullable
+  private SimpleIdlingResource mIdlingResource;
+
+  /**
+   * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+   */
+  @VisibleForTesting
+  @NonNull
+  public IdlingResource getIdlingResource() {
+    if (mIdlingResource == null) {
+      mIdlingResource = new SimpleIdlingResource();
+    }
+    return mIdlingResource;
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_select_recipe);
 
     ButterKnife.bind(this);
+
+    // Get the IdlingResource instance
+    getIdlingResource();
 
     mSavedInstanceState = savedInstanceState;
     initViews();
@@ -78,6 +103,19 @@ public class SelectRecipeActivity extends AppCompatActivity implements
 
     Call<List<Recipe>> recipesRequest = recipesService.getRecipes();
 
+    /**
+     * The IdlingResource is null in production as set by the @Nullable annotation which means
+     * the value is allowed to be null.
+     *
+     * If the idle state is true, Espresso can perform the next action.
+     * If the idle state is false, Espresso will wait until it is true before
+     * performing the next action.
+     */
+    if (mIdlingResource != null) {
+      mIdlingResource.setIdleState(false);
+      Timber.d("mIdlingResource state before retrofit call: %s", mIdlingResource.isIdleNow());
+    }
+
     recipesRequest.enqueue(new Callback<List<Recipe>>() {
       @Override
       public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
@@ -89,6 +127,11 @@ public class SelectRecipeActivity extends AppCompatActivity implements
           Timber.d("Number of objects in Recipe List: %s", recipesList.size());
           mAdapter.setRecipeList(recipesList);
           scrollListToSavedPosition();
+          //Allow Espresso to perform the next action in Test
+          if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+            Timber.d("mIdlingResource state after retrofit call: %s", mIdlingResource.isIdleNow());
+          }
         }
       }
 
@@ -97,6 +140,7 @@ public class SelectRecipeActivity extends AppCompatActivity implements
         //hide loading indicator
         mLoadingIndicator.setVisibility(View.INVISIBLE);
         Timber.e(t);
+        mIdlingResource.setIdleState(true);
       }
     });
   }
