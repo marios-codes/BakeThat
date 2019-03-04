@@ -133,13 +133,15 @@ public class StepDetailsFragment extends Fragment {
       //not two pane
       //Hide previous step button if the user navigates to the first step
       if (step.getId() == 0) {
-        assert previousStepBtn != null;
-        previousStepBtn.setVisibility(View.INVISIBLE);
+        if (previousStepBtn != null) {
+          previousStepBtn.setVisibility(View.INVISIBLE);
+        }
       }
       //Hide next step button if the user navigates to the last step
       if (step.getId() == mStepsList.size() - 1) {
-        assert nextStepBtn != null;
-        nextStepBtn.setVisibility(View.INVISIBLE);
+        if (nextStepBtn != null) {
+          nextStepBtn.setVisibility(View.INVISIBLE);
+        }
       }
       if (!isLandscape) {
         //show text description, otherwise we get a NPE calling setText()
