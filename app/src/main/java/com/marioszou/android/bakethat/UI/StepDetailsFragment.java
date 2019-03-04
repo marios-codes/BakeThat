@@ -44,6 +44,8 @@ public class StepDetailsFragment extends Fragment {
   private int mChosenStepId;
   private boolean mIsTwoPane;
   private SimpleExoPlayer mPlayer;
+  private long mSavedVideoPosition;
+  private Step mChosenStep;
 
   @Nullable
   @BindView(R.id.tv_step_details_desc)
@@ -98,25 +100,24 @@ public class StepDetailsFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_step_details, container, false);
     ButterKnife.bind(this, view);
 
+    Timber.d("Player initial position: %d", mSavedVideoPosition);
     //continue video playback to the point it was in an orientation change
-    long savedVideoPosition = 0;
-    Timber.d("Player initial position: %d", savedVideoPosition);
     if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_PLAYER_POSITION)) {
-      savedVideoPosition = savedInstanceState.getLong(SAVED_PLAYER_POSITION);
-      Timber.d("Player position after orientation change: %d", savedVideoPosition);
+      mSavedVideoPosition = savedInstanceState.getLong(SAVED_PLAYER_POSITION);
+      Timber.d("Player position after orientation change: %d", mSavedVideoPosition);
     }
 
     //get Step from step ID
-    Step chosenStep = mStepsList.get(mChosenStepId);
+    mChosenStep = mStepsList.get(mChosenStepId);
     //check if fragment is shown in landscape mode
     boolean isLandscape = getResources().getBoolean(R.bool.is_landscape);
 
-    initViews(chosenStep, mIsTwoPane, isLandscape);
-    //check if step has video instructions to initialize the exo player
-    if (!chosenStep.getVideoURL().isEmpty()) {
-      Timber.d("Starting Player with position: %d", savedVideoPosition);
-      initPlayer(chosenStep.getVideoURL(), savedVideoPosition);
-    }
+    initViews(mChosenStep, mIsTwoPane, isLandscape);
+//    //check if step has video instructions to initialize the exo player
+//    if (!chosenStep.getVideoURL().isEmpty()) {
+//      Timber.d("Starting Player with position: %d", savedVideoPosition);
+//      initPlayer(chosenStep.getVideoURL(), savedVideoPosition);
+//    }
 
     // Inflate the layout for this fragment
     return view;
@@ -169,6 +170,7 @@ public class StepDetailsFragment extends Fragment {
 
   private void releasePlayer() {
     if (mPlayer != null) {
+      mSavedVideoPosition = mPlayer.getCurrentPosition();
       mPlayer.stop();
       mPlayer.release();
       mPlayer = null;
@@ -176,8 +178,18 @@ public class StepDetailsFragment extends Fragment {
   }
 
   @Override
-  public void onDestroyView() {
-    super.onDestroyView();
+  public void onResume() {
+    super.onResume();
+    //check if step has video instructions to initialize the exo player
+    if (!mChosenStep.getVideoURL().isEmpty()) {
+      Timber.d("Starting Player with position: %d", mSavedVideoPosition);
+      initPlayer(mChosenStep.getVideoURL(), mSavedVideoPosition);
+    }
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
     releasePlayer();
   }
 
@@ -185,9 +197,8 @@ public class StepDetailsFragment extends Fragment {
   public void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
     Timber.d("Inside on SaveInstanceState");
-    if (mPlayer != null) {
-      outState.putLong(SAVED_PLAYER_POSITION, mPlayer.getCurrentPosition());
-      Timber.d("Player position before orientation change: %d", mPlayer.getCurrentPosition());
-    }
+    outState.putLong(SAVED_PLAYER_POSITION, mSavedVideoPosition);
+    Timber.d("Player position before orientation change: %d", mSavedVideoPosition);
+
   }
 }
