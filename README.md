@@ -8,6 +8,13 @@ contains a home screen widget presenting the selected recipe's ingredients. Fina
 
 It was submitted to Udacity's [Android Developer Nanodegree](https://eu.udacity.com/course/android-developer-nanodegree-by-google--nd801) and passed successfully.
 
+## Screenshots
+![Phone Portrait](https://raw.githubusercontent.com/marioszou/BakeThat/master/screenshots/bake-portrait-select-recipe.png)
+![Phone Portrait ExoPlayer](https://raw.githubusercontent.com/marioszou/BakeThat/master/screenshots/bake-portrait-exoplayer.png)
+![Tablet Landscape Details](https://raw.githubusercontent.com/marioszou/BakeThat/master/screenshots/bake-tablet-land-master-detail.png)
+![Tablet Grid Layout](https://raw.githubusercontent.com/marioszou/BakeThat/master/screenshots/bake-tablet-land-grid.png)
+![Phone Widget](https://raw.githubusercontent.com/marioszou/BakeThat/master/screenshots/bake-portrait-widget.png)
+
 ## Used Libraries
 * [Retrofit 2](https://github.com/square/retrofit) and [Gson converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson)
 * [OkHttp](https://github.com/square/okhttp)
