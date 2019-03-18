@@ -8,8 +8,11 @@ contains a home screen widget presenting the selected recipe's ingredients. Fina
 
 It was submitted to Udacity's [Android Developer Nanodegree](https://eu.udacity.com/course/android-developer-nanodegree-by-google--nd801) and passed successfully.
 
+## Screens
+![Screen 1] ()
+
 ## Used Libraries
-* [Retrofit 2](https://github.com/square/retrofit) with [RxJava adapter](https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2) and [Gson converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson)
+* [Retrofit 2](https://github.com/square/retrofit) and [Gson converter](https://github.com/square/retrofit/tree/master/retrofit-converters/gson)
 * [OkHttp](https://github.com/square/okhttp)
 * [ButterKnife](https://github.com/JakeWharton/butterknife)
 * [Gson](https://github.com/google/gson)
